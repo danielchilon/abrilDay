@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Un pequeño regalo de Día del Libro: poemas elegidos para ti.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📘%3C/text%3E%3C/svg%3E">
+  <title>Día del Libro para ARALALA</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&amp;family=Dancing+Script:wght@400;600;700&amp;family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;display=swap" rel="stylesheet">
+  <style>
+:root{
+  --cream:#eaf5fb;
+  --paper:#ffffff;
+  --ink:#0f2d43;
+  --wine:#1d6fa5;
+  --wine-deep:#124066;
+  --gold:#4fb8e0;
+  --rose-muted:#5b8aa6;
+  --border:#1d6fa526;
+  --glow:#4fb8e055;
+}
+@keyframes petalFall{0%{transform:translateY(-10%) translateX(0) rotate(0deg);opacity:0}10%{opacity:.9}90%{opacity:.9}100%{transform:translateY(110%) translateX(70px) rotate(300deg);opacity:0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes drawLine{from{width:0}to{width:60px}}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes auroraDrift{0%{transform:translate(-10%,-6%) scale(1)}50%{transform:translate(8%,6%) scale(1.15)}100%{transform:translate(-10%,-6%) scale(1)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 4px 20px var(--glow),0 0 0 0 #4fb8e000}50%{box-shadow:0 6px 32px var(--glow),0 0 0 8px #4fb8e01a}}
+@keyframes floatIcon{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.petal{position:fixed;pointer-events:none;z-index:1;animation:petalFall linear infinite;font-size:1.1rem;filter:saturate(1.1) drop-shadow(0 0 6px #7ed4f0aa)}
+.starfield{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star-dot{position:absolute;border-radius:50%;background:#eaf7ff;animation:twinkle ease-in-out infinite}
+.aurora{position:absolute;pointer-events:none;border-radius:50%;filter:blur(60px);opacity:.55;animation:auroraDrift 14s ease-in-out infinite;z-index:0}
+.fade-up{animation:fadeUp .8s cubic-bezier(.22,.61,.36,1) forwards;opacity:0}
+.fade-up-d1{animation-delay:.15s}
+.fade-up-d2{animation-delay:.3s}
+.fade-up-d3{animation-delay:.45s}
+.fade-up-d4{animation-delay:.6s}
+.fade-up-d5{animation-delay:.75s}
+.page{display:none;width:100%;min-height:100%}
+.page.active{display:flex;animation:fadeUp .5s ease forwards}
+.shimmer-text{background:linear-gradient(90deg,var(--wine-deep),var(--gold),var(--wine-deep));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite}
+.divider{height:2px;width:60px;background:linear-gradient(90deg,var(--gold),transparent);animation:drawLine 1s ease forwards .3s;width:0;box-shadow:0 0 8px var(--gold)}
+.floating-icon{display:inline-block;animation:floatIcon 4s ease-in-out infinite;filter:drop-shadow(0 0 18px #4fb8e099)}
+
+/* Poet list — estilo de lomos de libro en un pequeño estante */
+.poet-row{display:flex;align-items:center;gap:.9rem;width:100%;text-align:left;padding:1rem 1.25rem;border-radius:10px;cursor:pointer;background:var(--paper);border:1px solid var(--border);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.poet-row:hover{transform:translateX(4px);box-shadow:0 6px 18px #1d6fa522;border-color:#1d6fa555}
+.poet-row:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
+.poet-row .poet-mark{font-family:'Playfair Display',serif;font-style:italic;color:var(--gold);font-size:1rem;min-width:1.6rem}
+.poet-row .poet-label{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--ink)}
+.poet-row .poet-arrow{margin-left:auto;color:var(--rose-muted);opacity:0;transform:translateX(-4px);transition:all .25s ease}
+.poet-row:hover .poet-arrow{opacity:1;transform:translateX(0)}
+#poetList{perspective:800px}
+.poet-row{transition:transform .3s ease,box-shadow .25s ease}
+.poet-row:hover{transform:translateX(4px) rotateY(-6deg);box-shadow:8px 8px 24px -10px #1d6fa570,0 0 16px #4fb8e030}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.poet-row:nth-child(odd){animation:slideInLeft .6s ease forwards}
+.poet-row:nth-child(even){animation:slideInRight .6s ease forwards}
+.poet-row:nth-child(1){animation-delay:.1s}
+.poet-row:nth-child(2){animation-delay:.2s}
+.poet-row:nth-child(3){animation-delay:.3s}
+.poet-row:nth-child(4){animation-delay:.4s}
+.poet-row:nth-child(5){animation-delay:.5s}
+.poet-row:nth-child(6){animation-delay:.6s}
+.poet-row:nth-child(7){animation-delay:.7s}
+.poet-row{position:relative;overflow:hidden}
+.poet-row::before{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;
+  background:linear-gradient(120deg,transparent,#4fb8e045,transparent);
+  transform:skewX(-20deg);transition:left .6s ease}
+.poet-row:hover::before{left:120%}
+@keyframes sealPulse{0%{box-shadow:0 0 0 0 #1d6fa555}100%{box-shadow:0 0 0 14px #1d6fa500}}
+.poet-row:active{animation:sealPulse .5s ease-out}
+.poet-row{position:relative;overflow:hidden}
+.poet-row::after{content:'';position:absolute;top:0;right:0;width:0;height:0;
+  border-style:solid;border-width:0 0 0 0;
+  border-color:transparent transparent var(--cream) transparent;
+  transition:border-width .25s ease}
+.poet-row:hover::after{border-width:0 22px 22px 0;
+  border-color:transparent var(--gold) var(--cream) transparent;
+  filter:drop-shadow(-2px 2px 3px #00000022)}
+
+/* Poem card — como una página con una cinta superior */
+.card-poem{background:linear-gradient(160deg,var(--paper),#eaf6fc);border:1px solid var(--border);border-radius:4px 4px 14px 14px;padding:1.75rem 1.6rem;margin-bottom:1.25rem;position:relative;overflow:hidden;box-shadow:0 10px 30px -18px #0f2d4350;transition:transform .3s ease,box-shadow .3s ease}
+.card-poem:hover{transform:translateY(-3px);box-shadow:0 14px 36px -16px #1d6fa540}
+.card-poem::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.card-poem .poem-text::first-letter{font-family:'Playfair Display',serif;font-style:italic;font-size:2.1rem;color:var(--wine);line-height:0}
+.copy-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;border-radius:99px;cursor:pointer;background:#1d6fa514;border:1px solid #1d6fa540;color:var(--wine);font-family:'Cormorant Garamond',serif;font-size:.95rem;transition:background .25s ease,transform .2s ease}
+.copy-btn:hover{background:#1d6fa526;transform:translateY(-1px)}
+.copy-btn:focus-visible,.icon-btn:focus-visible,button:focus-visible{outline:2px solid var(--wine);outline-offset:2px}
+
+.copy-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(8px);background:var(--wine);color:#fff;padding:.7rem 1.5rem;border-radius:99px;opacity:0;transition:opacity .3s ease,transform .3s ease;z-index:999;font-family:'Cormorant Garamond',serif;letter-spacing:.02em;pointer-events:none;box-shadow:0 8px 24px #12406655}
+.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.icon-btn{transition:transform .25s ease,background .25s ease}
+.icon-btn:hover{transform:translateY(-2px)}
+
+/* Modo noche: una sala de lectura íntima, no un overlay chillón */
+.night-mode{--cream:#081726;--paper:#0f2136;--ink:#dcecf9;--wine:#5fc2f0;--wine-deep:#5fc2f0;--gold:#8fe0ff;--rose-muted:#8fc4de;--border:#5fc2f026;--glow:#5fc2f055;background:var(--cream)}
+.night-mode .page-cover{background:radial-gradient(ellipse at center,#0f2540,#050d18)!important}
+.night-mode .page-poets{background:linear-gradient(180deg,#0d1e32,#050d18)!important}
+.night-mode .page-detail{background:linear-gradient(180deg,#0d1e32,#050d18)!important}
+.night-mode .card-poem{background:linear-gradient(160deg,#122841,#0a1626);backdrop-filter:blur(6px)}
+.night-mode .poet-row{background:#122841cc}
+.night-mode .poet-row:hover{box-shadow:0 6px 22px #00000066,0 0 18px #5fc2f030}
+.night-mode .text-main{color:var(--ink)!important}
+.night-mode .text-sub{color:var(--rose-muted)!important}
+.night-mode .poem-text{color:var(--ink)!important}
+.night-mode #nightToggle,.night-mode #audioToggle{background:#5fc2f022;color:var(--gold);border-color:#5fc2f040}
+.night-mode .star-dot{background:#eaf7ff;box-shadow:0 0 6px #8fe0ff}
+.night-mode .aurora{opacity:.35}
+
+@media (prefers-reduced-motion:reduce){
+  .fade-up,.page.active,.petal,.shimmer-text,.divider,.star-dot,.aurora{animation:none!important;opacity:1!important;transform:none!important}
+}
+body{overflow-x:hidden;box-sizing:border-box}
+*{box-sizing:border-box}
+</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full m-0 p-0" style="font-family:'Cormorant Garamond',serif">
+  <div id="app" class="h-full w-full overflow-auto relative" style="background:var(--cream)">
+   <!-- Campo de estrellas decorativo -->
+   <div id="stars" class="starfield" aria-hidden="true"></div>
+   <!-- Estrellas y destellos cayendo -->
+   <div id="petals" aria-hidden="true"></div>
+   <!-- Aviso de copiado -->
+   <div id="toast" class="copy-toast" role="status" aria-live="polite">✓ Poema copiado</div>
+   <!-- Botón de modo noche -->
+   <button id="nightToggle" onclick="toggleNight()" aria-label="Alternar modo noche" class="icon-btn fixed top-4 right-4 z-50 w-10 h-10 rounded-full flex items-center justify-center" style="background:#1d6fa533;color:var(--wine);border:1px solid #1d6fa544;backdrop-filter:blur(4px)">
+    <i data-lucide="moon" style="width:18px;height:18px"></i>
+   </button>
+
+   <!-- PÁGINA 1: Portada -->
+   <div id="pageCover" class="page active page-cover relative overflow-hidden flex-col items-center justify-center text-center px-6" style="background:radial-gradient(ellipse at center,#eaf5fb,#d3e9f7);min-height:100%">
+    <div class="aurora" aria-hidden="true" style="top:-10%;left:-10%;width:60vw;height:60vw;background:radial-gradient(circle,#4fb8e0,transparent 70%)"></div>
+    <div class="aurora" aria-hidden="true" style="bottom:-15%;right:-10%;width:55vw;height:55vw;background:radial-gradient(circle,#1d6fa5,transparent 70%);animation-delay:-7s"></div>
+    <div class="max-w-xl mx-auto py-16" style="position:relative;z-index:1">
+     <div class="fade-up mb-6 floating-icon" style="font-size:3rem;opacity:0" aria-hidden="true">📖</div>
+     <h1 id="coverTitle" class="fade-up fade-up-d1 text-main" style="font-family:'Dancing Script',cursive;font-size:1.6rem;line-height:1.8;color:var(--ink);opacity:0">Hoy, 23 de abril, cada palabra guarda un sentimiento…<br>
+      y cada página, un suspiro.<br>FELIZ DÍA DEL LIBRO ARALALA<br><span class="shimmer-text" style="font-size:1.3rem">Todo lo que encontrarás aquí ha sido pensado solo para ti.</span></h1>
+     <p id="coverDedicatoria" class="fade-up fade-up-d2 text-sub mt-4" style="font-family:'Dancing Script',cursive;font-size:1.2rem;color:var(--wine);opacity:0"></p>
+     <button id="btnDescubrir" onclick="showPage('pagePoets')" class="fade-up fade-up-d3 mt-10 px-10 py-3 rounded-full text-lg tracking-wide cursor-pointer" style="opacity:0;font-family:'Cormorant Garamond',serif;background:linear-gradient(135deg,var(--wine),#4fb8e0);color:#fff;border:none;box-shadow:0 4px 20px #1d6fa544;transition:transform .25s ease,box-shadow .25s ease;animation:fadeUp .8s cubic-bezier(.22,.61,.36,1) .45s forwards,glowPulse 3s ease-in-out .8s infinite" onmouseover="this.style.transform='translateY(-2px) scale(1.03)';this.style.boxShadow='0 8px 28px #1d6fa570'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 20px #1d6fa544'">Descubrir</button>
+    </div>
+   </div>
+
+   <!-- PÁGINA 2: Poetas -->
+   <div id="pagePoets" class="page page-poets flex-col items-center px-6 py-16" style="background:linear-gradient(180deg,#eaf5fb,#dcedf8);min-height:100%">
+    <button onclick="showPage('pageCover')" class="self-start mb-8 flex items-center gap-2 cursor-pointer text-sub" style="background:none;border:none;color:var(--wine);font-family:'Cormorant Garamond',serif;font-size:1rem"><i data-lucide="arrow-left" style="width:16px;height:16px"></i> Volver</button>
+    <h2 class="fade-up text-main mb-2" style="font-family:'Dancing Script',cursive;font-size:2.2rem;color:var(--ink);opacity:0">Elige un poeta</h2>
+    <p class="fade-up fade-up-d1 text-sub mb-10" style="color:var(--wine);font-size:1rem;opacity:0">Deja que sus palabras hablen por ti</p>
+    <div id="poetList" class="flex flex-col gap-3 w-full max-w-md"></div>
+   </div>
+
+   <!-- PÁGINA 3: Detalle del poeta -->
+   <div id="pageDetail" class="page page-detail flex-col items-center px-6 py-12" style="background:linear-gradient(180deg,#eaf5fb,#dcedf8);min-height:100%">
+    <button onclick="showPage('pagePoets')" class="self-start mb-6 flex items-center gap-2 cursor-pointer text-sub" style="background:none;border:none;color:var(--wine);font-family:'Cormorant Garamond',serif;font-size:1rem"><i data-lucide="arrow-left" style="width:16px;height:16px"></i> Volver a poetas</button>
+    <div class="w-full max-w-lg">
+     <h2 id="poetName" class="fade-up text-main mb-1" style="font-family:'Dancing Script',cursive;font-size:2.4rem;color:var(--ink);opacity:0"></h2>
+     <div class="divider fade-up fade-up-d1 mb-8"></div>
+     <div id="poetCards"></div>
+    </div>
+   </div>
+  </div>
+  <!-- Botón de audio ambiental -->
+  <button id="audioToggle" onclick="toggleAudio()" aria-label="Alternar música ambiental" class="icon-btn fixed bottom-4 right-4 z-50 w-10 h-10 rounded-full flex items-center justify-center" style="background:#1d6fa533;color:var(--wine);border:1px solid #1d6fa544;backdrop-filter:blur(4px)">
+   <i data-lucide="volume-x" id="audioIcon" style="width:18px;height:18px"></i>
+  </button>
+  <script>
+// Poets data
+const poets = [
+  {name:'Pablo Neruda', poems:[
+    {cat:'Para sentirse especial',title:'Poema 20',text:"Puedo escribir los versos más tristes esta noche.\nEscribir, por ejemplo: La noche está estrellada,\ny tiritan, azules, los astros, a lo lejos.\nEl viento de la noche gira en el cielo y canta.\nPuedo escribir los versos más tristes esta noche.\nYo la quise, y a veces ella también me quiso.\nEn las noches como ésta la tuve entre mis brazos.\nLa besé tantas veces bajo el cielo infinito.\nElla me quiso, a veces yo también la quería.\nCómo no haber amado sus grandes ojos fijos.\nPuedo escribir los versos más tristes esta noche.\nPensar que no la tengo. Sentir que la he perdido.\nOír la noche inmensa, más inmensa sin ella.\nY el verso cae al alma como al pasto el rocío.\nQué importa que mi amor no pudiera guardarla.\nLa noche está estrellada y ella no está conmigo.\nEso es todo. A lo lejos alguien canta. A lo lejos\nMi alma no se contenta con haberla perdido.\nComo para acercarla mi mirada la busca.\nMi corazón la busca, y ella no está conmigo.\nLa misma noche que hace blanquear los mismos árboles.\nNosotros, los de entonces, ya no somos los mismos.\nYa no la quiero, es cierto, pero cuánto la quise.\nMi voz buscaba el viento para tocar su oído.\nDe otro. Será de otro. Como antes de mis besos.\nSu voz, su cuerpo claro. Sus ojos infinitos.\nYa no la quiero, es cierto, pero tal vez la quiero.\nEs tan corto el amor, y es tan largo el olvido.\nPorque en noches como ésta la tuve entre mis brazos,\nmi alma no se contenta con haberla perdido.\nAunque éste sea el último dolor que ella me causa,\ny estos sean los últimos versos que yo le escribo."},
+    {cat:'Para conmover tu ser',title:'Soneto XVII',text:"No te amo como si fueras rosa de sal, topacio\no flecha de claveles que propagan el fuego:\nte amo como se aman ciertas cosas oscuras,\nsecretamente, entre la sombra y el alma.\nTe amo como la planta que no florece y lleva\ndentro de sí, escondida, la luz de aquellas flores,\ny gracias a tu amor vive oscuro en mi cuerpo\nel apretado aroma que ascendió de la tierra.\nTe amo sin saber cómo, ni cuándo, ni de dónde,\nte amo directamente sin problemas ni orgullo:\nasí te amo porque no sé amar de otra manera,\nsino así de este modo en que no soy ni eres,\ntan cerca que tu mano sobre mi pecho es mía,\ntan cerca que se cierran tus ojos con mi sueño."},
+    {cat:'Para admirar tu belleza',title:'Poema 15',text:"Me gustas cuando callas porque estás como ausente,\ny me oyes desde lejos, y mi voz no te toca.\nParece que los ojos se te hubieran volado\ny parece que un beso te cerrara la boca.\n\nComo todas las cosas están llenas de mi alma\nemerges de las cosas, llena del alma mía.\nMariposa de sueño, te pareces a mi alma,\ny te pareces a la palabra melancolía.\n\nMe gustas cuando callas y estás como distante.\nY estás como quejándote, mariposa en arrullo.\nY me oyes desde lejos, y mi voz no te alcanza:\ndéjame que me calle con el silencio tuyo.\n\nDéjame que te hable también con tu silencio\nclaro como una lámpara, simple como un anillo.\nEres como la noche, callada y constelada.\nTu silencio es de estrella, tan lejano y sencillo.\n\nMe gustas cuando callas porque estás como ausente.\nDistante y dolorosa como si hubieras muerto.\nUna palabra entonces, una sonrisa bastan.\nY estoy alegre, alegre de que no sea cierto."}
+  ]},
+  {name:'Mario Benedetti', poems:[
+    {cat:'Para sentirse especial',title:'Te quiero',text:"Tus manos son mi caricia\nmis acordes cotidianos\nte quiero porque tus manos\ntrabajan por la justicia\n\nsi te quiero es porque sos\nmi amor mi cómplice y todo\ny en la calle codo a codo\nsomos mucho más que dos\n\ntus ojos son mi conjuro\ncontra la mala jornada\nte quiero por tu mirada\nque mira y siembra futuro\n\ntu boca que es tuya y mía\ntu boca no se equivoca\nte quiero porque tu boca\nsabe gritar rebeldía\n\nsi te quiero es porque sos\nmi amor mi cómplice y todo\ny en la calle codo a codo\nsomos mucho más que dos\n\ny por tu rostro sincero\ny tu paso vagabundo\ny tu llanto por el mundo\nporque sos pueblo te quiero\n\ny porque amor no es aureola\nni cándida moraleja\ny porque somos pareja\nque sabe que no está sola\n\nte quiero en mi paraíso\nes decir que en mi país\nla gente viva feliz\naunque no tenga permiso\n\nsi te quiero es porque sos\nmi amor mi cómplice y todo\ny en la calle codo a codo\nsomos mucho más que dos."},
+    {cat:'Para conmover tu ser',title:'Táctica y estrategia',text:"Mi táctica es\nmirarte\naprender como sos\nquererte como sos\n\nmi táctica es\nhablarte\ny escucharte\nconstruir con palabras\nun puente indestructible\n\nmi táctica es\nquedarme en tu recuerdo\nno sé cómo ni sé\ncon qué pretexto\npero quedarme en vos\n\nmi táctica es\nser franco\ny saber que sos franca\ny que no nos vendamos\nsimulacros\npara que entre los dos\nno haya telón\nni abismos\n\nmi estrategia es\nen cambio\nmás profunda y más\nsimple\n\nmi estrategia es\nque un día cualquiera\nno sé cómo ni sé\ncon qué pretexto\npor fin me necesites."},
+    {cat:'Para admirar tu belleza',title:'Corazón coraza',text:"Porque te tengo y no\nporque te pienso\nporque la noche está de ojos abiertos\nporque la noche pasa y digo amor\nporque has venido a recoger tu imagen\ny eres mejor que todas tus imágenes\nporque eres linda desde el pie hasta el alma\nporque eres buena desde el alma a mí\nporque te escondes dulce en el orgullo\npequeña y dulce\ncorazón coraza\n\nporque eres mía\nporque no eres mía\nporque te miro y muero\ny peor que muero\nsi no te miro amor\nsi no te miro\n\nporque tú siempre existes dondequiera\npero existes mejor donde te quiero\nporque tu boca es sangre\ny tienes frío\ntengo que amarte amor\ntengo que amarte\naunque esta herida duela como dos\naunque te busque y no te encuentre\ny aunque\nla noche pase y yo te tenga\ny no."}
+  ]},
+  {name:'Gustavo Adolfo Bécquer', poems:[
+    {cat:'Para alguien especial',title:'Rima XXI',text:"¿Qué es poesía?, dices, mientras clavas\nen mi pupila tu pupila azul,\n¡Qué es poesía! ¿Y tú me lo preguntas?\nPoesía... eres tú."},
+    {cat:'Para emocionar tu ser',title:'Rima XI',text:"Yo soy ardiente, yo soy morena,\nyo soy el símbolo de la pasión,\nde ansia de goces mi alma está llena.\n¿A mí me buscas?\nNo es a ti, no.\n\nMi frente es pálida, mis trenzas de oro:\npuedo brindarte dichas sin fin,\nyo de ternuras guardo un tesoro.\n¿A mí me llamas?\nNo, no es a ti.\n\nYo soy un sueño, un imposible,\nvano fantasma de niebla y luz;\nsoy incorpórea, soy intangible:\nno puedo amarte.\n¡Oh ven, ven tú!"},
+    {cat:'Para admirar tu belleza',title:'Tu pupila es Azul',text:"Tu pupila es azul y, cuando ríes,\nsu claridad suave me recuerda\nel trémulo fulgor de la mañana\nque en el mar se refleja.\nTu pupila es azul y, cuando lloras,\nlas transparentes lágrimas en ella\nse me figuran gotas de rocío\nsobre una violeta.\nTu pupila es azul, y si en su fondo\ncomo un punto de luz radia una idea,\nme parece en el cielo de la tarde\nuna perdida estrella."}
+  ]},
+  {name:'Alfonsina Storni', poems:[
+    {cat:'Para alguien especial',title:'Tú me quieres blanca',text:"Tú me quieres alba,\nMe quieres de espumas,\nMe quieres de nácar.\nQue sea azucena\nSobre todas, casta.\nDe perfume tenue.\nCorola cerrada.\n\nNi un rayo de luna\nFiltrado me haya.\nNi una margarita\nSe diga mi hermana.\nTú me quieres nívea,\nTú me quieres blanca,\nTú me quieres alba.\n\nTú que hubiste todas\nLas copas a mano,\nDe frutos y mieles\nLos labios morados.\nTú que en el banquete\nCubierto de pámpanos\nDejaste las carnes\nFestejando a Baco.\n\nTú que en los jardines\nNegros del Engaño\nVestido de rojo\nCorriste al Estrago.\n\nTú que el esqueleto\nConservas intacto\nNo sé todavía\nPor cuáles milagros,\nMe pretendes blanca\n(Dios te lo perdone),\nMe pretendes casta\n(Dios te lo perdone),\nMe pretendes alba.\n\nHuye hacia los bosques;\nVete a la montaña;\nLímpiate la boca;\nVive en las cabañas;\nToca con las manos\nLa tierra mojada;\nAlimenta el cuerpo\nCon raíz amarga;\nBebe de las rocas;\nDuerme sobre escarcha;\nRenueva tejidos\nCon salitre y agua;\nHabla con los pájaros\nY lévate al alba.\nY cuando las carnes\nTe sean tornadas,\nY cuando hayas puesto\nEn ellas el alma\nQue por las alcobas\nSe quedó enredada,\nEntonces, buen hombre,\nPreténdeme blanca,\nPreténdeme nívea,\nPreténdeme casta."},
+    {cat:'Para ver tu sonrisa',title:'Dolor',text:"Quisiera esta tarde divina de octubre\npasear por la orilla lejana del mar;\nque la arena de oro, y las aguas verdes,\ny los cielos puros me vieran pasar.\n\nSer alta, soberbia, perfecta, quisiera,\ncomo una romana, para concordar\ncon las grandes olas, y las rocas muertas\ny las anchas playas que ciñen el mar.\n\nCon el paso lento, y los ojos fríos\ny la boca muda, dejarme llevar;\nver cómo se rompen las olas azules\ncontra los granitos y no parpadear;\nver cómo las aves rapaces se comen\nlos peces pequeños y no despertar;\npensar que pudieran las frágiles barcas\nhundirse en las aguas y no suspirar;\nver que se adelanta, la garganta al aire,\nel hombre más bello, no desear amar...\n\nPerder la mirada, distraídamente,\nperderla y que nunca la vuelva a encontrar:\ny, figura erguida, entre cielo y playa,\nsentirme el olvido perenne del mar."},
+    {cat:'Para admirar tu belleza',title:'Alma desnuda',text:"Soy un alma desnuda en estos versos,\nAlma desnuda que angustiada y sola\nVa dejando sus pétalos dispersos.\n\nAlma que puede ser una amapola,\nQue puede ser un lirio, una violeta,\nUn peñasco, una selva y una ola.\n\nAlma que como el viento vaga inquieta\nY ruge cuando está sobre los mares,\nY duerme dulcemente en una grieta.\n\nAlma que adora sobre sus altares,\nDioses que no se bajan a cegarla;\nAlma que no conoce valladares.\n\nAlma que fuera fácil dominarla\nCon sólo un corazón que se partiera\nPara en su sangre cálida regarla.\n\nAlma que cuando está en la primavera\nDice al invierno que demora: vuelve,\nCaiga tu nieve sobre la pradera.\n\nAlma que cuando nieva se disuelve\nEn tristezas, clamando por las rosas\ncon que la primavera nos envuelve.\n\nAlma que a ratos suelta mariposas\nA campo abierto, sin fijar distancia,\nY les dice: libad sobre las cosas.\n\nAlma que ha de morir de una fragancia\nDe un suspiro, de un verso en que se ruega,\nSin perder, a poderlo, su elegancia.\n\nAlma que nada sabe y todo niega\nY negando lo bueno el bien propicia\nPorque es negando como más se entrega.\n\nAlma que suele haber como delicia\nPalpar las almas, despreciar la huella,\nY sentir en la mano una caricia.\n\nAlma que siempre disconforme de ella,\nComo los vientos vaga, corre y gira;\nAlma que sangra y sin cesar delira\nPor ser el buque en marcha de la estrella."}
+  ]},
+  {name:'Federico García Lorca', poems:[
+    {cat:'Para alguien importante',title:'Soneto de la dulce queja',text:"Tengo miedo a perder la maravilla\nde tus ojos de estatua y el acento\nque de noche me pone en la mejilla\nla solitaria rosa de tu aliento.\n\nTengo pena de ser en esta orilla\ntronco sin ramas; y lo que más siento\nes no tener la flor, pulpa o arcilla,\npara el gusano de mi sufrimiento.\n\nSi tú eres el tesoro oculto mío,\nsi eres mi cruz y mi dolor mojado,\nsi soy el perro de tu señorío,\n\nno me dejes perder lo que he ganado\ny decora las aguas de tu río\ncon hojas de mi otoño enajenado."},
+    {cat:'Para emocionar tu corazón',title:'Es verdad',text:"¡Ay qué trabajo me cuesta\nquererte como te quiero!\n\nPor tu amor me duele el aire,\nel corazón\ny el sombrero.\n\n¿Quién me compraría a mí\neste cintillo que tengo\ny esta tristeza de hilo\nblanco, para hacer pañuelos?\n\n¡Ay qué trabajo me cuesta\nquererte como te quiero!"},
+    {cat:'Para admirar tu belleza',title:'Gacela del amor imprevisto',text:"Nadie comprendía el perfume\nde la oscura magnolia de tu vientre.\nNadie sabía que martirizabas\nun colibrí de amor entre los dientes.\n\nMil caballitos persas se dormían\nen la plaza con luna de tu frente,\nmientras que yo enlazaba cuatro noches\ntu cintura, enemiga de la nieve.\n\nEntre yeso y jazmines, tu mirada\nera un pálido ramo de simientes.\nYo busqué, para darte, por mi pecho\nlas letras de marfil que dicen siempre.\n\nSiempre, siempre: jardín de mi agonía,\ntu cuerpo fugitivo para siempre,\nla sangre de tus venas en mi boca,\ntu boca ya sin luz para mi muerte."}
+  ]},
+  {name:'Octavio Paz', poems:[
+    {cat:'Para que te sientas especial',title:'Piedra de sol',text:"voy por tu cuerpo como por el mundo,\ntu vientre es una plaza soleada,\ntus pechos dos iglesias donde oficia\nla sangre sus misterios paralelos,\nmis miradas te cubren como yedra,\neres una ciudad que el mar asedia,\nuna muralla que la luz divide\nen dos mitades de color durazno,\nun paraje de sal, rocas y pájaros\nbajo la ley del mediodía absorto,\n\nvestida del color de mis deseos\ncomo mi pensamiento vas desnuda,\nvoy por tus ojos como por el agua,\nlos tigres beben sueño de esos ojos,\nel colibrí se quema en esas llamas,\nvoy por tu frente como por la luna,\ncomo la nube por tu pensamiento,\nvoy por tu vientre como por tus sueños,\n\ntu falda de maíz ondula y canta,\ntu falda de cristal, tu falda de agua,\ntus labios, tus cabellos, tus miradas,\ntoda la noche llueves, todo el día\nabres mi pecho con tus dedos de agua,\ncierras mis ojos con tu boca de agua,\nsobre mis huesos llueves, en mi pecho\nhunde raíces de agua un árbol líquido,\n\nel mundo nace cuando dos se besan,\ngota de luz de entrañas transparentes\nel cuarto como un fruto se entreabre\no estalla como un astro taciturno,\n\namar es combatir, si dos se besan\nel mundo cambia, encarnan los deseos,\nel pensamiento encarna, brotan las alas\nen las espaldas del esclavo, el mundo\nes real y tangible, el vino es vino,\nel pan vuelve a saber, el agua es agua,\namar es combatir, es abrir puertas,\ndejar de ser fantasma con un número\na perpetua cadena condenado\npor un amo sin rostro."},
+    {cat:'Para conmover tu ser',title:'Dos cuerpos',text:"Dos cuerpos frente a frente\nson a veces dos olas\ny la noche es océano.\n\nDos cuerpos frente a frente\nson a veces dos piedras\ny la noche desierto.\n\nDos cuerpos frente a frente\nson a veces raíces\nen la noche enlazadas.\n\nDos cuerpos frente a frente\nson a veces navajas\ny la noche relámpago.\n\nDos cuerpos frente a frente\nson dos astros que caen\nen un cielo vacío."},
+    {cat:'Para admirar tu belleza',title:'Carta de creencia',text:"Entre la noche y el día\nhay un territorio indeciso.\nNo es luz ni sombra:\n\nes tiempo.\nHora, pausa precaria,\npágina que se obscurece,\npágina en la que escribo,\ndespacio, estas palabras.\n\nLa tarde\nes una brasa que se consume.\nEl día gira y se deshoja.\nLima los confines de las cosas\nun río obscuro.\n\nTerco y suave\nlas arrastra, no sé adónde.\nLa realidad se aleja.\n\nYo escribo:\nhablo conmigo\n\n—hablo contigo.\n\nQuisiera hablarte\ncomo hablan ahora,\ncasi borrados por las sombras\nel arbolito y el aire;\ncomo el agua corriente,\nsoliloquio sonámbulo;\ncomo el charco callado,\nreflector de instantáneos simulacros;\ncomo el fuego:\nlenguas de llama, baile de chispas,\ncuentos de humo.\n\nHablarte\ncon palabras visibles y palpables,\ncon peso, sabor y olor\ncomo las cosas.\n\nMientras lo digo\nlas cosas, imperceptiblemente,\nse desprenden de sí mismas\ny se fugan hacia otras formas,\nhacia otros nombres.\n\nMe quedan\nestas palabras: con ellas te hablo.\n\nLas palabras son puentes.\nTambién son trampas, jaulas, pozos.\nYo te hablo: tú no me oyes.\nNo hablo contigo:\n\nhablo con una palabra,\nEsa palabra eres tú,\n\nesa palabra\nte lleva de ti misma a ti misma.\nLa hicimos tú, yo, el destino.\nLa mujer que eres\nes la mujer a la que hablo:\nestas palabras son tu espejo,\neres tú misma y el eco de tu nombre.\nYo también,\n\nal hablarte,\nme vuelvo un murmullo,\naire y palabras, un soplo,\nun fantasma que nace de estas letras.\n\nLas palabras son puentes:\nla sombra de las colinas de Meknès\nsobre un campo de girasoles estáticos\nes un golfo violeta.\nSon las tres de la tarde,\ntienes nueve años y te has adormecido\nentre los brazos frescos de la rubia mimosa.\nEnamorado de la geometría\nun gavilán dibuja un círculo.\nTiembla en el horizonte\nla mole cobriza de los cerros.\nEntre peñascos vertiginosos\nlos cubos blancos de un poblado.\nUna columna de humo sube del llano\ny poco a poco se disipa, aire en el aire,\ncomo el canto del muecín\nque perfora el silencio, asciende y florece\nen otro silencio.\n\nSol inmóvil,\ninmenso espacio de alas abiertas;\nsobre llanuras de reflejos\nla sed levanta alminares transparentes.\nTú no estás dormida ni despierta:\ntú flotas en un tiempo sin horas.\nUn soplo apenas suscita\nremotos países de menta y manantiales.\nDéjate llevar por estas palabras\nhacia ti misma."}
+  ]},
+  {name:'D34th_404', poems:[
+    {cat:'Para ti',title:'Hambre de ti',text:"Quiero comerte como se comen las sombras,\nsin ruido,\nsin sangre,\nsolo borrando los bordes que te separan de mí.\n\nQue entres en mi cuerpo como entra la noche en una habitación:\ndespacio,\ninevitable,\nhasta que todo aprenda a llamarse oscuridad contigo.\n\nQue mi piel encuentre la tuya\nComo el agua encuentra al agua,\nSin choque, sin ruido,\nSolo mezclándose hasta dejar de ser dos.\n\nSer uno, tan uno,\nQue las costuras del cuerpo se nos borren\nQue tu pulso y el mío\nOlviden a quien pertenecían.\n\nQue tu piel sea mi forma,\nY la mía, tu memoria.\n\nQue nos fundamos despacio\nComo la niebla con la mañana.\n\nQuiero comerte despacio,\nSaborearte entre mis dientes,\nCon la memoria,\nCon los días,\nCon la costumbre de respirarte.\n\nQue te vuelvas parte de mí,\nComo se vuelve parte del cuerpo un recuerdo,\nQue te beba en silencios,\nQue te mastique con pensamientos\nHasta que ya no sepa qué era mío y qué era tuyo.\n\nQuiero devorarte sin herirte,\nHasta que vivas en mis gestos,\nHasta que camines en mi voz,\nHasta que tu nombre suene raro si no está el mío.\n\nDevórame tú también,\nhazme desaparecer en tu memoria,\nque seamos dos nombres tachados\nen la misma piel.\n\nCon hambre,\nSin prisa,\nHasta que nos quedemos vacíos de nosotros\nY llenos de algo que no se sepa vivir separado."},
+    {cat:'Porque sí',title:'Infierno de tu paraíso',text:"Antes de ti\nel fuego tenía un color sencillo.\n\nDespués...\nhasta las cenizas comenzaron\na florecer.\n\nNo recuerdo haberte conocido.\n\nRecuerdo, en cambio,\nhaber despertado una madrugada\ncon olor a jardín en las manos,\naunque llevaba meses\ndurmiendo entre ruinas.\n\nEntonces comprendí\nque los paraísos no se visitan.\nSe contagian.\n\nEntraste en mi sangre\ncomo el invierno\nen los árboles que todavía creen en la primavera.\n\nDesde ese día,\ncada latido dejó de empujar sangre.\n\nEmpujaba campanas.\nEmpujaba pájaros ciegos.\nEmpujaba una procesión de ángeles\narrastrando las alas\ncomo si acabaran de salir de\nuna guerra contra Dios.\n\nNo me mires así.\n\nLos santos también aprendieron\na mentir\ncuando descubrieron\nque el cielo olía demasiado\na tu cuello.\n\nHe bebido de la lluvia\nque cae detrás de tus ojos.\nNo moja.\n\nOxida.\n\nTodo cuanto toca\nempieza lentamente\na recordar otra vida.\n\nPor eso olvido mi nombre\ncada vez que pronuncias el tuyo.\n\nHay algo monstruosamente puro\nen tu existencia.\n\nComo una rosa\nalimentándose del corazón\nde quien la riega.\n\nComo un templo\nlevantado piedra sobre piedra\ncon las costillas\nde todos sus creyentes.\n\nY yo...\n\nyo seguiría construyéndolo.\n\nAunque supiera\nque cada ladrillo\nes otro pedazo de mí\nque jamás volveré a encontrar.\n\nPorque no eres el paraíso.\n\nEres aquello\nque el paraíso sueña\ncuando tiene pesadillas.\n\nLa fruta\nque hizo pecar\nal árbol.\n\nLa oración\nque arrodilló\na los dioses.\n\nLa grieta\npor donde la eternidad\nse desangra en silencio.\n\nEl universo\ndebió romperse\nla primera vez\nque alguien te imaginó.\n\nDesde entonces\nlos relojes envejecen hacia atrás,\nlos espejos devuelven rostros\nque aún no han nacido,\ny la noche\nse persigna\nantes de tocar tu sombra.\n\nEl resto ya lo sabes.\n\nEl mío\nlleva tu rostro.\n\nY si alguna divinidad\nme ofreciera escapar de él,\nle pediría, con una serenidad monstruosa,\nque volviera a encerrarme\n\nen el infierno\nde tu paraíso."},
+    {cat:'Eres tú',title:'Inconmensurable',text:"Hubo un instante en el que el mundo \ndejó de hacer ruido.\nNo porque el silencio hubiera llegado.\nSino porque todo lo demás decidió marcharse.\nLas palabras quedaron atrás, incapaces de seguirnos.\nBastó la cercanía para que el tiempo \ncomenzara a respirar más despacio.\n\nLevanté la mirada.\nVi.\n\nNo fue el rostro.\nFue algo que escapaba del rostro, \nalgo que no tenía nombre y que, aun así, \nparecía haber existido desde mucho \nantes que nosotros dos.\n\nLa belleza suele ser un jardín en primavera.\nLo que vi aquella noche \nse parecía más a la sangre sobre la nieve.\n\nTan imposible.\nTan viva.\n\nNada de lo que sentí pedía explicación.\nSolo pedía ser observado, \ncomo se observa algo que nace por primera vez\nen la mitad de la noche más larga del año.\n\nHay quienes buscan la belleza en lo que brilla.\nYo la encontré en lo que permanece quieto.\nEn la forma en que respirabas \nsin saber que tenía mis ojos clavados en tu interior.\nEn la manera en que tu voz,\nincluso callada,\nseguía diciendo algo.\n\nEn la manera en que brillas.\n\nPensé,\npor un momento,\nque había llegado tarde a algo antiguo.\nQue esa belleza no había nacido esa noche,\nsino que solo esa noche había decidido dejarse ver.\nComo si siempre hubiera estado ahí, \nesperando\nque alguien se acercara lo suficiente para merecerla, \nsin miedo a la oscuridad que la protegía.\n\nDurante un instante pensé que \nlos ojos también podían abrir puertas.\nNo hacia una habitación.\nNi hacia un recuerdo.\n\nSino hacia una verdad.\n\nY comprendí que existen miradas \nque no iluminan el rostro.\nIluminan a quien las contempla.\nComo un relámpago que no busca destruir, \nSolo mostrar por un segundo \ntodo lo que la noche esconde.\n\nComprendí que tu mirada no ocupa un rincón en el cielo,\nTu mirada es el cielo.\n\nY no el cielo tranquilo de las tardes sin viento,\nsino el cielo justo antes de la tormenta,\nel que te hace levantar la cabeza sin saber por qué.\n\nDesde entonces, cada amanecer es apenas\nuna pobre traducción de aquel instante.\nPorque hay luces que pertenecen al sol.\nY otras que, una vez vistas,\ncondenan al sol a parecer insuficiente.\n\nY yo, que he visto amaneceres sin contarlos,\nahora los cuento distinto:\n\nlos que fueron antes de verte así,\ny los que, sin poder evitarlo,\nya no dejan de compararse contigo."}
+  ]},
+];
+
+// Navegación entre páginas
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('app').scrollTop=0;
+  // Reactivar animaciones de entrada
+  document.getElementById(id).querySelectorAll('.fade-up').forEach(el=>{
+    el.style.animation='none';el.offsetHeight;el.style.animation='';
+  });
+}
+
+// Lista de poetas (generada a partir de los datos, para que nombre y botón nunca se desincronicen)
+function renderPoetList(){
+  const list=document.getElementById('poetList');
+  list.innerHTML='';
+  poets.forEach((poet,i)=>{
+    const row=document.createElement('button');
+    row.type='button';
+    row.className=`poet-row fade-up fade-up-d${Math.min(i+1,5)}`;
+    row.style.opacity='0';
+    row.setAttribute('aria-label',`Ver poemas de ${poet.name}`);
+    row.innerHTML=`
+      <span class="poet-mark" aria-hidden="true">✦</span>
+      <span class="poet-label text-main">${poet.name}</span>
+      <i data-lucide="chevron-right" class="poet-arrow" style="width:18px;height:18px"></i>`;
+    row.addEventListener('click',()=>showPoet(i));
+    list.appendChild(row);
+  });
+  lucide.createIcons();
+}
+
+function showPoet(i){
+  const p=poets[i];
+  document.getElementById('poetName').textContent=p.name;
+  const container=document.getElementById('poetCards');
+  container.innerHTML='';
+  p.poems.forEach((poem,idx)=>{
+    const card=document.createElement('div');
+    card.className='card-poem fade-up';
+    card.style.animationDelay=`${.2+idx*.2}s`;card.style.opacity='0';
+    const dedic=window.elementSdk?.config?.dedicatoria_nombre;
+    const dedicLine=dedic?`<p style="font-family:'Dancing Script',cursive;color:var(--wine);font-size:.95rem;margin-bottom:.5rem">Para ${dedic} ✨</p>`:'';
+    card.innerHTML=`
+      <p style="font-family:'Dancing Script',cursive;color:var(--gold);font-size:1.1rem;margin-bottom:.25rem">${poem.cat}</p>
+      <h3 class="text-main" style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--ink);margin-bottom:.5rem">${poem.title}</h3>
+      ${dedicLine}
+      <p class="poem-text" style="white-space:pre-line;line-height:1.8;color:var(--ink);font-size:1.05rem">${poem.text}</p>
+      <div class="flex gap-3 mt-4">
+        <button onclick="copyPoem(this)" class="copy-btn"><i data-lucide="copy" style="width:14px;height:14px"></i> Copiar</button>
+      </div>`;
+    container.appendChild(card);
+  });
+  showPage('pageDetail');
+  lucide.createIcons();
+}
+
+function copyPoem(btn){
+  const card=btn.closest('.card-poem');
+  const texto=card.querySelector('.poem-text').innerText;
+  navigator.clipboard.writeText(texto).then(()=>{
+    const toast=document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),2000);
+  }).catch(()=>{
+    // El portapapeles puede fallar por permisos del navegador; el poema sigue visible para copiarlo manualmente.
+  });
+}
+
+// Destellos y estrellas cayendo
+function createPetals(){
+  const c=document.getElementById('petals');
+  const symbols=['✨','⭐','💫','🌙'];
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');p.className='petal';
+    p.textContent=symbols[i%symbols.length];
+    p.style.left=Math.random()*90+'%';
+    p.style.animationDuration=(6+Math.random()*6)+'s';
+    p.style.animationDelay=(Math.random()*8)+'s';
+    p.style.fontSize=(.8+Math.random()*.6)+'rem';
+    c.appendChild(p);
+  }
+}
+// Campo de estrellas titilantes de fondo
+function createStars(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<50;i++){
+    const s=document.createElement('div');s.className='star-dot';
+    const size=(1+Math.random()*2).toFixed(1);
+    s.style.width=size+'px';s.style.height=size+'px';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    s.style.animationDuration=(2+Math.random()*3)+'s';
+    s.style.animationDelay=(Math.random()*5)+'s';
+    c.appendChild(s);
+  }
+}
+createPetals();
+createStars();
+renderPoetList();
+
+// Night mode
+let isNight=true;
+document.getElementById('app').classList.add('night-mode');
+
+function toggleNight(){
+  isNight=!isNight;
+  document.getElementById('app').classList.toggle('night-mode',isNight);
+}
+
+// Audio
+let audioCtx,isPlaying=false;
+function toggleAudio(){
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(isPlaying){audioCtx.suspend();isPlaying=false;document.getElementById('audioIcon').setAttribute('data-lucide','volume-x');}
+  else{
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    else playAmbient();
+    isPlaying=true;document.getElementById('audioIcon').setAttribute('data-lucide','volume-2');
+  }
+  lucide.createIcons();
+}
+function playAmbient(){
+  const g=audioCtx.createGain();g.gain.value=.06;g.connect(audioCtx.destination);
+  function playNote(){
+    if(!isPlaying)return;
+    const o=audioCtx.createOscillator();const ng=audioCtx.createGain();
+    o.type='sine';
+    const notes=[261.63,293.66,329.63,349.23,392,440,493.88,523.25];
+    o.frequency.value=notes[Math.floor(Math.random()*notes.length)];
+    ng.gain.setValueAtTime(0,audioCtx.currentTime);
+    ng.gain.linearRampToValueAtTime(.04,audioCtx.currentTime+.3);
+    ng.gain.linearRampToValueAtTime(0,audioCtx.currentTime+2);
+    o.connect(ng);ng.connect(g);o.start();o.stop(audioCtx.currentTime+2);
+    setTimeout(playNote,1500+Math.random()*2000);
+  }
+  playNote();
+}
+
+// Element SDK
+const defaultConfig={
+  main_title:'Hoy, 23 de abril, cada palabra guarda un sentimiento…\ny cada página, un suspiro.\nFELIZ DÍA DEL LIBRO ARALALA\nTodo lo que encontrarás aquí ha sido pensado solo para ti.',
+  dedicatoria_nombre:'',
+  boton_descubrir:'Descubrir',
+  background_color:'#eaf5fb',
+  surface_color:'#ffffff',
+  text_color:'#0f2d43',
+  primary_action_color:'#1d6fa5',
+  accent_color:'#4fb8e0',
+  font_family:'Dancing Script',
+  font_size:16
+};
+
+function applyConfig(c){
+  // Cover title
+  const title=c.main_title||defaultConfig.main_title;
+  const lines=title.split('\n');
+  const el=document.getElementById('coverTitle');
+  if(lines.length>=3)el.innerHTML=lines.slice(0,-1).join('<br>')+'<br><span class="shimmer-text" style="font-size:1.3rem">'+lines[lines.length-1]+'</span>';
+  else el.textContent=title;
+
+  // Dedicatoria
+  const ded=document.getElementById('coverDedicatoria');
+  if(c.dedicatoria_nombre)ded.textContent='Con cariño para '+c.dedicatoria_nombre+' 💝';
+  else ded.textContent='';
+
+  // Button
+  document.getElementById('btnDescubrir').textContent=c.boton_descubrir||defaultConfig.boton_descubrir;
+
+  // Colors
+  const bg=c.background_color||defaultConfig.background_color;
+  const txt=c.text_color||defaultConfig.text_color;
+  const primary=c.primary_action_color||defaultConfig.primary_action_color;
+  const accent=c.accent_color||defaultConfig.accent_color;
+  document.getElementById('app').style.background=bg;
+  document.querySelectorAll('.text-main').forEach(e=>e.style.color=txt);
+  document.querySelectorAll('.text-sub').forEach(e=>e.style.color=primary);
+  document.getElementById('btnDescubrir').style.background=`linear-gradient(135deg,${primary},${primary}cc)`;
+
+  // Font
+  const font=c.font_family||defaultConfig.font_family;
+  const base=c.font_size||defaultConfig.font_size;
+  el.style.fontFamily=`${font}, Dancing Script, cursive`;
+  el.style.fontSize=`${base*1.6/16}rem`;
+  document.getElementById('poetName').style.fontFamily=`${font}, Dancing Script, cursive`;
+}
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange:async(c)=>applyConfig(c),
+  mapToCapabilities:(c)=>({
+    recolorables:[
+      {get:()=>c.background_color||defaultConfig.background_color,set:v=>{c.background_color=v;window.elementSdk.setConfig({background_color:v})}},
+      {get:()=>c.surface_color||defaultConfig.surface_color,set:v=>{c.surface_color=v;window.elementSdk.setConfig({surface_color:v})}},
+      {get:()=>c.text_color||defaultConfig.text_color,set:v=>{c.text_color=v;window.elementSdk.setConfig({text_color:v})}},
+      {get:()=>c.primary_action_color||defaultConfig.primary_action_color,set:v=>{c.primary_action_color=v;window.elementSdk.setConfig({primary_action_color:v})}},
+      {get:()=>c.accent_color||defaultConfig.accent_color,set:v=>{c.accent_color=v;window.elementSdk.setConfig({accent_color:v})}}
+    ],
+    borderables:[],
+    fontEditable:{get:()=>c.font_family||defaultConfig.font_family,set:v=>{c.font_family=v;window.elementSdk.setConfig({font_family:v})}},
+    fontSizeable:{get:()=>c.font_size||defaultConfig.font_size,set:v=>{c.font_size=v;window.elementSdk.setConfig({font_size:v})}}
+  }),
+  mapToEditPanelValues:(c)=>new Map([
+    ['main_title',c.main_title||defaultConfig.main_title],
+    ['dedicatoria_nombre',c.dedicatoria_nombre||defaultConfig.dedicatoria_nombre],
+    ['boton_descubrir',c.boton_descubrir||defaultConfig.boton_descubrir]
+  ])
+});
+
+lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f0fb8d463bd6dfb',t:'MTc3Njk3NzIzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
